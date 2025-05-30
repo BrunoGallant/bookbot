@@ -1,29 +1,36 @@
-from stats import get_num_words, count_characters
+from stats import (
+    get_num_words,
+    chars_dict_to_sorted_list,
+    get_chars_dict,
+)
 
-def get_boot_text(file_path: str) -> str:
-    """
-    Loads file content from the specified file path.
-    Args:
-        file_path (str): The path to the file to be read.
-    Returns:
-        str: The content of the file.
-    """
-    with open(file_path, 'r') as file:
-        return file.read()
 
 def main():
-    """
-    Main function to execute the script.
-    """
-    file_path = 'books/frankenstein.txt'
-    try:
-        boot_text = get_boot_text(file_path)
-        counted = get_num_words(boot_text)
-        print(f"{counted} words found in the document")
-        print(count_characters(boot_text))
-    except FileNotFoundError:
-        print(f"Error: The file '{file_path}' does not exist.")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-if __name__ == "__main__":
-    main()  
+    book_path = "books/frankenstein.txt"
+    text = get_book_text(book_path)
+    num_words = get_num_words(text)
+    chars_dict = get_chars_dict(text)
+    chars_sorted_list = chars_dict_to_sorted_list(chars_dict)
+    print_report(book_path, num_words, chars_sorted_list)
+
+
+def get_book_text(path):
+    with open(path) as f:
+        return f.read()
+
+
+def print_report(book_path, num_words, chars_sorted_list):
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {book_path}...")
+    print("----------- Word Count ----------")
+    print(f"Found {num_words} total words")
+    print("--------- Character Count -------")
+    for item in chars_sorted_list:
+        if not item["char"].isalpha():
+            continue
+        print(f"{item['char']}: {item['num']}")
+
+    print("============= END ===============")
+
+
+main()
